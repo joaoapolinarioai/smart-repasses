@@ -13,7 +13,7 @@ import { DealerProfilePage } from '@/features/social/pages/DealerProfile'
 
 import { Toaster } from 'sonner'
 
-import { AdminGuard, StatusGuard } from '@/components/Guards'
+import { AdminGuard, StatusGuard, ProfileCompletenessGuard } from '@/components/Guards'
 import { AdminDashboard } from '@/features/admin/pages/Dashboard'
 import { UserManagement } from '@/features/admin/pages/UserManagement'
 
@@ -35,21 +35,24 @@ function App() {
                 {/* Auth Protected Routes with Status Check */}
                 <Route element={<StatusGuard />}>
                     <Route element={<DashboardLayout />}>
-                        <Route path="/" element={<MarketplaceFeed />} />
-                        <Route path="/favorites" element={<FavoritesPage />} />
                         <Route path="/settings" element={<ProfilePage />} />
-                        <Route path="/inventory" element={<InventoryPage />} />
-                        <Route path="/chat" element={<ChatPage />} />
-                        <Route path="/chat/:identifier" element={<ChatPage />} />
-                        <Route path="/network" element={<NetworkPage />} />
-                        <Route path="/network/dealer/:username" element={<DealerProfilePage />} />
-                        <Route path="/@:username" element={<DealerProfilePage />} />
-                        <Route path="/:username" element={<DealerProfilePage />} />
 
-                        {/* Admin Routes */}
-                        <Route path="/admin" element={<AdminGuard />}>
-                            <Route index element={<AdminDashboard />} />
-                            <Route path="users" element={<UserManagement />} />
+                        <Route element={<ProfileCompletenessGuard />}>
+                            <Route path="/" element={<MarketplaceFeed />} />
+                            <Route path="/favorites" element={<FavoritesPage />} />
+                            <Route path="/inventory" element={<InventoryPage />} />
+                            <Route path="/chat" element={<ChatPage />} />
+                            <Route path="/chat/:identifier" element={<ChatPage />} />
+                            <Route path="/network" element={<NetworkPage />} />
+                            <Route path="/network/dealer/:username" element={<DealerProfilePage />} />
+                            <Route path="/@:username" element={<DealerProfilePage />} />
+                            <Route path="/:username" element={<DealerProfilePage />} />
+
+                            {/* Admin Routes */}
+                            <Route path="/admin" element={<AdminGuard />}>
+                                <Route index element={<AdminDashboard />} />
+                                <Route path="users" element={<UserManagement />} />
+                            </Route>
                         </Route>
 
                         <Route path="*" element={<Navigate to="/" replace />} />

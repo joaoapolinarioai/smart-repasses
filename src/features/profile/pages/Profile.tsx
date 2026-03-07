@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Phone, Loader2, Camera, CheckCircle2, User, MapPin, AtSign, Info, Move, Save, Pencil, Layout, Globe, MessageSquare } from 'lucide-react'
+import { Phone, Loader2, Camera, CheckCircle2, User, MapPin, AtSign, Info, Move, Save, Pencil, Layout, Globe, MessageSquare, ShieldAlert } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/useAuthStore'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -225,6 +225,30 @@ export function ProfilePage() {
             </div>
 
             <div className="max-w-5xl mx-auto -mt-16 px-6 space-y-8 relative z-20">
+                {/* Completion Banner */}
+                {(!formData.username || !formData.phone || (!formData.city || !formData.state)) && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="bg-amber-500 rounded-[2rem] p-8 shadow-2xl shadow-amber-500/20 text-black flex flex-col md:flex-row items-center gap-6"
+                    >
+                        <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center shrink-0">
+                            <ShieldAlert className="w-8 h-8 text-black" />
+                        </div>
+                        <div className="flex-1 space-y-2 text-center md:text-left">
+                            <h2 className="text-xl font-black uppercase tracking-tighter">Complete seu Perfil</h2>
+                            <p className="text-[10px] font-bold uppercase tracking-widest opacity-80 leading-relaxed">
+                                Para liberar todas as funções do ecossistema, os seguintes campos são obrigatórios:
+                            </p>
+                            <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 pt-1">
+                                {!formData.username && <span className="bg-black/10 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-black/5">@usuário</span>}
+                                {!formData.phone && <span className="bg-black/10 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-black/5">Telefone/Zap</span>}
+                                {(!formData.city || !formData.state) && <span className="bg-black/10 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-black/5">Cidade/Estado</span>}
+                            </div>
+                        </div>
+                        <CheckCircle2 className="w-12 h-12 opacity-10 hidden md:block" />
+                    </motion.div>
+                )}
 
                 {/* Visual Identity Section */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

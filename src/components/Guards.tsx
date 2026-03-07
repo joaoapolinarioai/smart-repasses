@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from 'react-router-dom'
+import { Navigate, Outlet, Link } from 'react-router-dom'
 import { useAuthStore } from '@/store/useAuthStore'
 import { Loader2, Clock, ShieldAlert } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -22,6 +22,48 @@ export function AdminGuard({ allowedRoles = ['master', 'admin', 'mediator'] }: A
 
     if (!hasAccess) {
         return <Navigate to="/feed" replace />
+    }
+
+    return <Outlet />
+}
+
+export function ProfileCompletenessGuard() {
+    const { profile, isLoading } = useAuthStore()
+
+    if (isLoading) return null
+
+    if (profile) {
+        const isProfileIncomplete = !profile.username || !profile.phone || !profile.city || !profile.state
+
+        if (isProfileIncomplete) {
+            return (
+                <div className="min-h-[80vh] flex items-center justify-center p-6 text-center">
+                    <div className="max-w-md space-y-8">
+                        <div className="w-24 h-24 rounded-[2.5rem] bg-amber-500/10 border-2 border-amber-500/20 text-amber-500 flex items-center justify-center mx-auto shadow-2xl">
+                            <ShieldAlert className="w-10 h-10 animate-pulse" />
+                        </div>
+
+                        <div className="space-y-4">
+                            <h1 className="text-3xl font-black text-white uppercase tracking-tighter leading-none">
+                                Perfil Incompleto
+                            </h1>
+                            <p className="text-zinc-400 font-bold uppercase tracking-[0.2em] text-[10px] leading-relaxed max-w-[280px] mx-auto">
+                                Para acessar todas as funcionalidades do ecossistema, você precisa configurar sua identidade digital, telefone e localização.
+                            </p>
+                        </div>
+
+                        <div className="pt-4">
+                            <Link
+                                to="/settings"
+                                className="inline-block w-full py-5 bg-primary text-black rounded-[1.5rem] font-black uppercase text-[10px] tracking-widest hover:bg-opacity-90 transition-all shadow-xl active:scale-95 text-center"
+                            >
+                                Configurar Perfil Agora
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            )
+        }
     }
 
     return <Outlet />
