@@ -228,25 +228,41 @@ export function ProfilePage() {
                 {/* Completion Banner */}
                 {(!formData.username || !formData.phone || (!formData.city || !formData.state)) && (
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="bg-amber-500 rounded-[2rem] p-8 shadow-2xl shadow-amber-500/20 text-black flex flex-col md:flex-row items-center gap-6"
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="bg-[#0C0C0C] rounded-[2.5rem] p-8 shadow-2xl shadow-black/20 border border-white/5 relative overflow-hidden group"
                     >
-                        <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center shrink-0">
-                            <ShieldAlert className="w-8 h-8 text-black" />
-                        </div>
-                        <div className="flex-1 space-y-2 text-center md:text-left">
-                            <h2 className="text-xl font-black uppercase tracking-tighter">Complete seu Perfil</h2>
-                            <p className="text-[10px] font-bold uppercase tracking-widest opacity-80 leading-relaxed">
-                                Para liberar todas as funções do ecossistema, os seguintes campos são obrigatórios:
-                            </p>
-                            <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 pt-1">
-                                {!formData.username && <span className="bg-black/10 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-black/5">@usuário</span>}
-                                {!formData.phone && <span className="bg-black/10 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-black/5">Telefone/Zap</span>}
-                                {(!formData.city || !formData.state) && <span className="bg-black/10 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-black/5">Cidade/Estado</span>}
+                        {/* Background Glow */}
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 blur-[60px] rounded-full group-hover:bg-amber-500/20 transition-all" />
+
+                        <div className="flex flex-col md:flex-row items-center gap-8 relative z-10">
+                            <div className="w-16 h-16 bg-amber-500/10 border-2 border-amber-500/20 rounded-2xl flex items-center justify-center shrink-0 text-amber-500">
+                                <ShieldAlert className="w-8 h-8 animate-pulse" />
+                            </div>
+                            <div className="flex-1 space-y-2 text-center md:text-left">
+                                <h2 className="text-xl font-[950] text-white uppercase tracking-tighter">Complete seu Estúdio</h2>
+                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 leading-relaxed">
+                                    Preencha os campos obrigatórios para liberar o marketplace:
+                                </p>
+                                <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
+                                    {!formData.username && (
+                                        <div className="bg-zinc-900 px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest text-[#F0A727] border border-white/5">
+                                            @usuário
+                                        </div>
+                                    )}
+                                    {!formData.phone && (
+                                        <div className="bg-zinc-900 px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest text-[#F0A727] border border-white/5">
+                                            WhatsApp
+                                        </div>
+                                    )}
+                                    {(!formData.city || !formData.state) && (
+                                        <div className="bg-zinc-900 px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest text-[#F0A727] border border-white/5">
+                                            Localização
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
-                        <CheckCircle2 className="w-12 h-12 opacity-10 hidden md:block" />
                     </motion.div>
                 )}
 
