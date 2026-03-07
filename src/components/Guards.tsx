@@ -37,28 +37,25 @@ export function ProfileCompletenessGuard() {
 
         if (isProfileIncomplete) {
             return (
-                <div className="min-h-screen bg-[#050505] flex items-center justify-center p-6 text-center relative overflow-hidden">
-                    {/* Background Decor */}
-                    <div className="absolute inset-0 bg-mesh opacity-20 blur-[100px]" />
-
-                    <div className="max-w-md space-y-8 relative z-10">
+                <div className="min-h-screen bg-[#F8F9FA] flex items-center justify-center p-6 text-center relative overflow-hidden">
+                    <div className="max-w-md space-y-12 relative z-10">
                         <div className="w-24 h-24 rounded-[2.5rem] bg-amber-500/10 border-2 border-amber-500/20 text-amber-500 flex items-center justify-center mx-auto shadow-2xl shadow-amber-500/5">
                             <ShieldAlert className="w-10 h-10 animate-pulse" />
                         </div>
 
                         <div className="space-y-4">
-                            <h1 className="text-3xl font-[950] text-white uppercase tracking-tighter leading-none">
+                            <h1 className="text-4xl font-[950] text-[#0C0C0C] uppercase tracking-tighter leading-none">
                                 Perfil Incompleto
                             </h1>
-                            <p className="text-zinc-500 font-bold uppercase tracking-[0.2em] text-[10px] leading-relaxed max-w-[280px] mx-auto">
-                                Para liberar o acesso à rede, você precisa configurar sua identidade digital, telefone e localização.
+                            <p className="text-zinc-400 font-bold uppercase tracking-[0.2em] text-[10px] leading-relaxed max-w-[280px] mx-auto">
+                                Para liberar o acesso à rede exclusiva, você precisa configurar sua identidade digital, telefone e localização.
                             </p>
                         </div>
 
                         <div className="pt-4">
                             <Link
                                 to="/settings"
-                                className="inline-block w-full py-5 bg-white text-black rounded-[1.5rem] font-[950] uppercase text-[10px] tracking-[0.2em] hover:bg-zinc-200 transition-all shadow-2xl active:scale-95 text-center"
+                                className="inline-block w-full py-6 bg-[#0C0C0C] text-white rounded-[1.5rem] font-[950] uppercase text-[10px] tracking-[0.3em] hover:bg-zinc-800 transition-all shadow-2xl shadow-black/10 active:scale-95 text-center"
                             >
                                 Configurar Perfil Agora
                             </Link>
