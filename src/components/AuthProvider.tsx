@@ -38,7 +38,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             .eq('id', userId)
             .single()
 
-        if (!error && data) {
+        if (error) {
+            console.error('Profile not found or error fetching profile:', error.message)
+            // Se o perfil não existe mais no banco (foi deletado), desloga o auth
+            const { signOut } = useAuthStore.getState()
+            signOut()
+            return
+        }
+
+        if (data) {
             setProfile(data)
         }
     }

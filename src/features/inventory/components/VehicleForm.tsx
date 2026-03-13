@@ -541,7 +541,7 @@ export function VehicleForm({ isOpen, onClose, initialData }: VehicleFormProps) 
                                 <button
                                     onClick={handleSubmit}
                                     disabled={isSubmitting || !formData.year || !formData.price_repasse || !user || formData.images.length === 0}
-                                    className="px-16 py-6 bg-[#0C0C0C] text-primary rounded-3xl flex items-center justify-center gap-4 text-sm font-black uppercase tracking-[0.2em] hover:bg-black transition-all shadow-[0_20px_50px_rgba(0,0,0,0.2)] group disabled:opacity-50 disabled:grayscale active:scale-95"
+                                    className="px-16 py-6 bg-[#0C0C0C] text-primary rounded-3xl flex items-center justify-center gap-4 text-sm font-black uppercase tracking-[0.2em] hover:bg-black transition-all shadow-[0_20px_50px_rgba(0,0,0,0.2)] group disabled:opacity-50 disabled:grayscale active:scale-95 whitespace-nowrap"
                                 >
                                     {isSubmitting ? (
                                         <Loader2 className="w-6 h-6 animate-spin" />

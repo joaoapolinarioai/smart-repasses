@@ -9,7 +9,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
-import { Profile } from '@/store/useAuthStore'
+import { Profile, useAuthStore } from '@/store/useAuthStore'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import {
@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/sheet"
 
 export function UserManagement() {
+    const { user } = useAuthStore()
     const [searchTerm, setSearchTerm] = useState('')
     const [statusFilter, setStatusFilter] = useState('all')
     const [editingUser, setEditingUser] = useState<Profile | null>(null)
@@ -66,16 +67,57 @@ export function UserManagement() {
 
     const deleteUserMutation = useMutation({
         mutationFn: async (userId: string) => {
+            // Proteção extra: não permitir que o admin exclua a si mesmo
+            if (userId === user?.id) {
+                throw new Error('Você não pode excluir sua própria conta através do painel administrativo.')
+            }
+
+            console.log('Iniciando limpeza em cascata manual para usuário:', userId);
+            
+            // 0. Limpar reservas deste usuário em veículos de terceiros
+            await supabase.from('vehicles').update({ 
+                reserved_by: null, 
+                status: 'available', 
+                locked_until: null 
+            }).eq('reserved_by', userId)
+
+            // 1. Conexões e Seguidores
+            await supabase.from('connections').delete().or(`follower_id.eq.${userId},following_id.eq.${userId}`)
+            
+            // 2. Avaliações (enviadas e recebidas)
+            await supabase.from('reviews').delete().or(`reviewer_id.eq.${userId},reviewed_id.eq.${userId}`)
+
+            // 3. Notificações
+            await supabase.from('notifications').delete().eq('profile_id', userId)
+
+            // 4. Chat: Mensagens, Participantes e Bloqueios
+            await supabase.from('chat_messages').delete().eq('sender_id', userId)
+            await supabase.from('chat_participants').delete().eq('profile_id', userId)
+            await supabase.from('chat_bans').delete().or(`banner_id.eq.${userId},banned_id.eq.${userId}`)
+
+            // 5. Negociações (Deals)
+            await supabase.from('deals').delete().or(`buyer_id.eq.${userId},seller_id.eq.${userId}`)
+
+            // 6. Veículos (Estoque)
+            await supabase.from('vehicles').delete().eq('seller_id', userId)
+
+            // 7. Finalmente o perfil
             const { error } = await supabase.from('profiles').delete().eq('id', userId)
-            if (error) throw error
+            
+            if (error) {
+                console.error('Erro detalhado do Supabase (409?):', error);
+                throw error
+            }
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['admin-users'] })
-            toast.success('Usuário removido da rede.')
+            toast.success('Usuário e todos os dados vinculados removidos com sucesso.')
             setIsDeleting(null)
         },
         onError: (err: any) => {
-            toast.error('Erro ao excluir: ' + err.message)
+            console.error('Falha na exclusão:', err);
+            const msg = err.message || 'Erro de integridade no banco de dados';
+            toast.error(`Exclusão negada: ${msg}`);
         }
     })
 

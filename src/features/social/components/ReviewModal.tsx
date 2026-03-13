@@ -39,7 +39,7 @@ export function ReviewModal({
                 .select('id')
                 .eq('deal_id', dealId)
                 .eq('reviewer_id', user.id)
-                .single();
+                .maybeSingle();
 
             if (data) setIsSuccess(true);
         };

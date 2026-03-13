@@ -340,9 +340,9 @@ export function DashboardLayout() {
                                                             if (notif.type === 'review_pending' && notif.link) {
                                                                 const dealId = notif.link.split('/').pop();
                                                                 if (dealId) {
-                                                                    const { data: existingReview } = await supabase.from('reviews').select('id').eq('deal_id', dealId).eq('reviewer_id', currentUserId).single();
+                                                                     const { data: existingReview } = await supabase.from('reviews').select('id').eq('deal_id', dealId).eq('reviewer_id', currentUserId).maybeSingle();
                                                                     if (existingReview) { toast.info('Você já enviou sua avaliação. Obrigado!'); return; }
-                                                                    const { data: deal } = await supabase.from('deals').select('id, seller_id, buyer_id, seller:profiles!seller_id(full_name, store_name), buyer:profiles!buyer_id(full_name, store_name)').eq('id', dealId).single();
+                                                                    const { data: deal } = await supabase.from('deals').select('id, seller_id, buyer_id, seller:profiles!seller_id(full_name, store_name), buyer:profiles!buyer_id(full_name, store_name)').eq('id', dealId).maybeSingle();
                                                                     if (deal) {
                                                                         const isBuyer = deal.buyer_id === currentUserId;
                                                                         const seller = Array.isArray(deal.seller) ? deal.seller[0] : deal.seller;
