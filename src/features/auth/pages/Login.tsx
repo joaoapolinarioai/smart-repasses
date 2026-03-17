@@ -13,6 +13,7 @@ export function LoginPage() {
     const [fullName, setFullName] = useState('')
     const [storeName, setStoreName] = useState('')
     const [loading, setLoading] = useState(false)
+    const [isForgotPassword, setIsForgotPassword] = useState(false)
 
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -22,7 +23,17 @@ export function LoginPage() {
         setLoading(true)
 
         try {
-            if (isRegistering) {
+            if (isForgotPassword) {
+                const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                    redirectTo: window.location.origin + '/reset-password',
+                })
+                if (error) throw error
+                toast.success('E-mail de recuperação enviado!', {
+                    description: 'Verifique sua caixa de entrada para redefinir sua senha.',
+                    duration: 10000,
+                })
+                setIsForgotPassword(false)
+            } else if (isRegistering) {
                 if (password !== confirmPassword) {
                     throw new Error('As senhas não coincidem. Verifique e tente novamente.')
                 }
@@ -86,10 +97,10 @@ export function LoginPage() {
                     </div>
 
                     <h1 className="login-title">
-                        {isRegistering ? 'Criar Conta' : 'Entrar na Rede'}
+                        {isForgotPassword ? 'Recuperar Senha' : (isRegistering ? 'Criar Conta' : 'Entrar na Rede')}
                     </h1>
                     <p className="login-subtitle">
-                        {isRegistering ? 'CADASTRO DE REVENDEDORES' : 'ACESSO EXCLUSIVO B2B'}
+                        {isForgotPassword ? 'REDEFINIÇÃO DE ACESSO' : (isRegistering ? 'CADASTRO DE REVENDEDORES' : 'ACESSO EXCLUSIVO B2B')}
                     </p>
                 </div>
 
@@ -151,27 +162,38 @@ export function LoginPage() {
                         </div>
                     </div>
 
-                    <div className="login-input-group">
-                        <label className="login-label">Senha de Acesso</label>
-                        <div className="login-input-wrapper">
-                            <Lock className="login-icon" />
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="login-input"
-                                placeholder="••••••••"
-                                required
-                            />
-                            <button
-                                type="button"
-                                className="login-eye-button"
-                                onClick={() => setShowPassword(!showPassword)}
-                            >
-                                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                            </button>
+                    {!isForgotPassword && (
+                        <div className="login-input-group">
+                            <label className="login-label">Senha de Acesso</label>
+                            <div className="login-input-wrapper">
+                                <Lock className="login-icon" />
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="login-input"
+                                    placeholder="••••••••"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    className="login-eye-button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    )}
+
+                    {!isRegistering && !isForgotPassword && (
+                        <span 
+                            className="login-forgot-password"
+                            onClick={() => setIsForgotPassword(true)}
+                        >
+                            Esqueci minha senha
+                        </span>
+                    )}
 
                     <AnimatePresence>
                         {isRegistering && (
@@ -209,7 +231,7 @@ export function LoginPage() {
                             <Loader2 className="w-5 h-5 animate-spin" />
                         ) : (
                             <>
-                                {isRegistering ? 'Solicitar Cadastro' : 'Entrar no Ecossistema'}
+                                {isForgotPassword ? 'Recuperar Acesso' : (isRegistering ? 'Solicitar Cadastro' : 'Entrar no Ecossistema')}
                                 <ArrowRight className="w-4 h-4" />
                             </>
                         )}
@@ -218,10 +240,24 @@ export function LoginPage() {
 
                 <div className="text-center mt-6">
                     <p className="login-toggle">
-                        {isRegistering ? 'Já faz parte da rede?' : 'Ainda não é cadastrado?'} {' '}
-                        <span onClick={() => setIsRegistering(!isRegistering)}>
-                            {isRegistering ? 'Clique aqui para entrar' : 'Solicite acesso agora'}
-                        </span>
+                        {isForgotPassword ? (
+                            <>
+                                Lembrou sua senha? {' '}
+                                <span onClick={() => setIsForgotPassword(false)}>
+                                    Clique aqui para login
+                                </span>
+                            </>
+                        ) : (
+                            <>
+                                {isRegistering ? 'Já faz parte da rede?' : 'Ainda não é cadastrado?'} {' '}
+                                <span onClick={() => {
+                                    setIsRegistering(!isRegistering);
+                                    setIsForgotPassword(false);
+                                }}>
+                                    {isRegistering ? 'Clique aqui para entrar' : 'Solicite acesso agora'}
+                                </span>
+                            </>
+                        )}
                     </p>
                 </div>
 

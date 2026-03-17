@@ -16,6 +16,7 @@ import { Toaster } from 'sonner'
 import { AdminGuard, StatusGuard, ProfileCompletenessGuard } from '@/components/Guards'
 import { AdminDashboard } from '@/features/admin/pages/Dashboard'
 import { UserManagement } from '@/features/admin/pages/UserManagement'
+import { ResetPasswordPage } from '@/features/auth/pages/ResetPassword'
 
 function App() {
     const { user, isLoading } = useAuthStore()
@@ -32,6 +33,8 @@ function App() {
         <div className="min-h-screen bg-zinc-50">
             <Toaster position="bottom-right" richColors expand={true} />
             <Routes>
+                <Route path="/reset-password" element={<ResetPasswordPage />} />
+
                 {/* Auth Protected Routes with Status Check */}
                 <Route element={<StatusGuard />}>
                     <Route element={<DashboardLayout />}>

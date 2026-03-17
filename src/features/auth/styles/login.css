@@ -200,6 +200,25 @@
   text-decoration: underline;
 }
 
+.login-forgot-password {
+  display: block;
+  text-align: right;
+  font-size: 10px;
+  font-weight: 800;
+  color: #F0A727;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: -10px;
+  margin-bottom: 20px;
+  margin-right: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.login-forgot-password:hover {
+  color: #D6911E;
+}
+
 .login-footer {
   margin-top: 40px;
   padding-top: 24px;
